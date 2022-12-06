@@ -137,7 +137,7 @@ exports.protect = async (req, res, next) => {
     // 2) Verification token
     const decoded = jwt.verify(
       token,
-      `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN-Driver`
+      `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN-DRIVER`
     );
 
     // 3) Check if user still exists
