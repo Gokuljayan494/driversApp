@@ -4,7 +4,7 @@ let handlebars = require("handlebars");
 const jwt = require("jsonwebtoken");
 const DriverModel = require("../model/driversModel");
 const signToken = (id) => {
-  return jwt.sign({ id }, `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN`, {
+  return jwt.sign({ id }, `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN-AGENCY`, {
     expiresIn: `1d`,
   });
 };
@@ -136,6 +136,14 @@ exports.protect = async (req, res, next) => {
 exports.getAllDrivers = async (req, res) => {
   try {
     const drivers = await DriverModel.find();
+    res.status(200).json({ status: "sucess", drivers });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.driversSearch = async (req, res) => {
+  try {
     res.status(200).json({ status: "sucess", drivers });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });

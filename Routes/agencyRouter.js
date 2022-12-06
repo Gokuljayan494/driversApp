@@ -8,5 +8,6 @@ router.route("/loginAgency").post(agencyController.agencyLogin);
 router
   .route("/getAllDrivers")
   .get(agencyController.protect, agencyController.getAllDrivers);
+router.route("/searchDrivers").get(agencyController.protect);
 
 module.exports = router;
