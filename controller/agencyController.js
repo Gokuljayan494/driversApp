@@ -136,7 +136,14 @@ exports.protect = async (req, res, next) => {
 exports.getAllDrivers = async (req, res) => {
   try {
     const drivers = await DriverModel.find();
-    res.status(200).json({ status: "sucess", drivers });
+    let registeredDrivers = [];
+    drivers.forEach((el) => {
+      if (el.status === true) {
+        registeredDrivers.push(el);
+      }
+    });
+    console.log(registeredDrivers);
+    res.status(200).json({ status: "sucess", registeredDrivers });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }
@@ -144,7 +151,9 @@ exports.getAllDrivers = async (req, res) => {
 
 exports.driversSearch = async (req, res) => {
   try {
-    res.status(200).json({ status: "sucess", drivers });
+    drivers = await DriverModel.find({});
+
+    res.status(200).json({ status: "sucess", registeredDrivers });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }

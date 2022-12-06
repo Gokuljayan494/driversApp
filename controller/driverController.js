@@ -139,9 +139,10 @@ exports.protect = async (req, res, next) => {
       token,
       `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN-DRIVER`
     );
-
+    console.log(decoded);
     // 3) Check if user still exists
-    const currentUser = await AgencyModel.findById(decoded.id);
+    const currentUser = await DriverModel.findById(decoded.id);
+    console.log(currentUser);
     if (!currentUser) {
       throw new Error("this token is not valid for the user");
     }
@@ -156,7 +157,14 @@ exports.protect = async (req, res, next) => {
 exports.getAllAgencys = async (req, res) => {
   try {
     const agencys = await AgencyModel.find();
-    res.status(200).json({ status: "sucess", agencys });
+
+    let registeredAgencies = [];
+    agencys.forEach((el) => {
+      if (el.status === true) {
+        registeredAgencies.push(el);
+      }
+    });
+    res.status(200).json({ status: "sucess", registeredAgencies });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }
