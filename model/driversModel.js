@@ -80,6 +80,12 @@ DriverSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
 });
+DriverSchema.methods.createOtp = function (next) {
+  let OTP = Math.floor(1000 + Math.random() * 9000);
+  this.otp = OTP;
+  this.otpExpires = Date.now() + 10 * 60 * 1000;
+  return OTP;
+};
 const DriverModel = mongoose.model("Driver", DriverSchema);
 
 module.exports = DriverModel;
