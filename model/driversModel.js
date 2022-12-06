@@ -56,9 +56,15 @@ const DriverSchema = new mongoose.Schema(
       type: String,
       default: "notVerified",
     },
+    otpExpires: { type: Date },
     status: {
       type: Boolean,
       default: false,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
 

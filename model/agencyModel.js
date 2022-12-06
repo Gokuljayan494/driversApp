@@ -48,9 +48,15 @@ const agencySchema = new mongoose.Schema(
     district: { type: String, required: [true] },
     pincode: { type: Number, required: [true] },
     OTP: { type: String, default: "notVerified" },
+    otpExpires: { type: Date },
     status: {
       type: Boolean,
       default: false,
+    },
+    active: {
+      type: Boolean,
+      default: true,
+      select: false,
     },
   },
   {
@@ -68,6 +74,7 @@ agencySchema.pre("save", async function (next) {
 agencySchema.methods.createOtp = function () {
   let OTP = Math.floor(1000 + Math.random() * 9000);
   this.OTP = OTP;
+  this.otpExpires = Date.now() + 10 * 60 * 1000;
   return OTP;
 };
 const AgencyModel = mongoose.model("Agency", agencySchema);
