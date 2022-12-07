@@ -10,4 +10,10 @@ router.route("/loginDriver").post(driverController.driverLogin);
 router
   .route("/getAllAgencys")
   .get(driverController.protect, driverController.getAllAgencys);
+router.route("/forgotPasswordDriver").post(driverController.forgotPassword);
+router.route("/resetPasswordDriver").put(driverController.resetPassword);
+
+router
+  .route("/editDriver")
+  .put(driverController.protect, driverController.editDriver);
 module.exports = router;

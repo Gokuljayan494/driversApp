@@ -95,7 +95,7 @@ exports.driverLoginOtp = async (req, res) => {
 
       let message = ` 
       
-      Hello!\nThis is your OTP FOR Driver. \n  ${driverOtp}. \n For Login to Drivers App. \n Regards`;
+      <h1>Hello!</h1>\n<div>This is your OTP FOR Driver. \n <h3> ${driverOtp} </h3> \n For Login to Drivers App. \n Regards</div>`;
       agency = await sendEmail({
         email: driver.email,
         subject: `your login otp`,
@@ -104,7 +104,7 @@ exports.driverLoginOtp = async (req, res) => {
     } else {
       throw new Error("subscribe first");
     }
-    res.status(200).json({ status: "sucess", driver });
+    res.status(200).json({ status: "sucess", message: "OTP has sent to mail" });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }
@@ -181,6 +181,59 @@ exports.getAllAgencys = async (req, res) => {
       }
     });
     res.status(200).json({ status: "sucess", registeredAgencies });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    let driver = await DriverModel.findOne({ email: req.body.email });
+    let driverOtp = driver.createOtp();
+    await driver.save({ validateBeforeSave: false });
+    let message = ` 
+
+   <h1>Hello!</h1>\n<div>This is your OTP For Driver reset password. \n <h3>${driverOtp}<h3>. \n For Login to Drivers App. \n Regards \n Drivers App</div>`;
+    driver = await sendEmail({
+      email: driver.email,
+      subject: `your password reset otp`,
+      message,
+    });
+    res.status(200).json({
+      status: "sucess",
+      message: `Otp has sent to mail `,
+    });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    let currentDriver = await DriverModel.findOne({
+      otp: req.body.otp,
+      otpExpires: { $gte: Date.now() },
+    });
+    if (!currentDriver) {
+      throw new Error("invalid otp or No agency found");
+    }
+    currentDriver.password = req.body.password;
+    currentDriver.passwordConfirm = req.body.passwordConfirm;
+    // currentAgency.OTP=
+    currentDriver.save();
+    res.status(200).json({ status: "sucess", message: "password resetted" });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.editDriver = async (req, res) => {
+  try {
+    const driver = await DriverModel.findById(req.user);
+    driver.name = req.body.name || driver.name;
+    driver.mobile = req.body.mobile || driver.mobile;
+    await driver.save({ validateBeforeSave: false });
+    res.status(200).json({ status: "sucess", driver });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }

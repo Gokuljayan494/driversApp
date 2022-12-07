@@ -69,7 +69,10 @@ exports.agencyLoginOtp = async (req, res) => {
       console.log(agency);
       let message = ` 
       
-      Hello!\nThis is your OTP FOR AGENCY. \n  ${agencyoTP}. \n For Login to Drivers App. \n Regards`;
+      // <table><tr><td>
+
+      // </td></tr></table>
+      <h1> Hello!</h1>\n<div>This is your OTP FOR AGENCY. \n <h3> ${agencyoTP}</h3>.\nFor Login to Drivers App. \n Regards Drivers App</div>`;
       agency = await sendEmail({
         email: agency.email,
         subject: `your login otp`,
@@ -185,10 +188,10 @@ exports.forgotPassword = async (req, res) => {
     await agency.save({ validateBeforeSave: false });
     let message = ` 
 
-    Hello!\nThis is your OTP FOR AGENCY reset password. \n  ${agencyOtp}. \n For Login to Drivers App. \n Regards`;
+  <h1>Hello!</h1>\n<div>This is your OTP FOR AGENCY reset password. \n <h3> ${agencyOtp}</h3>. \n For Login to Drivers App. \n Regards \n Drivers App</div>`;
     agency = await sendEmail({
       email: agency.email,
-      subject: `your login otp`,
+      subject: `your password reset otp`,
       message,
     });
     res.status(200).json({
@@ -214,6 +217,17 @@ exports.resetPassword = async (req, res) => {
     // currentAgency.OTP=
     currentAgency.save();
     res.status(200).json({ status: "sucess", message: "password resetted" });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+exports.editAgency = async (req, res) => {
+  try {
+    let agecny = await AgencyModel.findById(req.user);
+    agecny.mobile = req.body.mobile || agecny.mobile;
+    agecny.companyName = req.body.companyName || agecny.companyName;
+    agency = agecny.save({ validateBeforeSave: false });
+    res.status(200).json({ status: "sucess", agecny });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }
