@@ -8,6 +8,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyparser = require("body-parser");
 /////////////////////////////////////////
+dotenv.config({ path: "./config.env" });
 app.use(express.urlencoded({ extended: true }));
 // app.use(express.)
 app.use(express.json());

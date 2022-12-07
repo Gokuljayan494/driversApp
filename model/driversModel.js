@@ -28,7 +28,7 @@ const DriverSchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "password needed"],
-      select: true,
+      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -85,6 +85,15 @@ DriverSchema.methods.createOtp = function (next) {
   this.otp = OTP;
   this.otpExpires = Date.now() + 10 * 60 * 1000;
   return OTP;
+};
+DriverSchema.methods.checkPassword = async function (
+  userInputtedpassword,
+  currentAgencyPassword
+) {
+  console.log(
+    await bcrypt.compare(currentAgencyPassword, userInputtedpassword)
+  );
+  return await bcrypt.compare(currentAgencyPassword, userInputtedpassword);
 };
 const DriverModel = mongoose.model("Driver", DriverSchema);
 

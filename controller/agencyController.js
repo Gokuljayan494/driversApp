@@ -41,29 +41,44 @@ exports.registerAgency = async (req, res) => {
 exports.agencyLoginOtp = async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(password);
     if (!email && !password) throw new Error("please enter the inputs");
     // find the agency whose trying to login
+    let agency = await AgencyModel.findOne({ email }).select("+password");
+    if (!agency) {
+      throw new Error("no agency found");
+    }
+    console.log(`agencyPassword:${agency.password}`);
+    // console.log(await agency.checkPassword(agency.password, password));
+    let agencyCheck = await agency.checkPassword(agency.password, password);
+    console.log(`AgencyCheck:${agencyCheck}`);
+    if (!agency || !agencyCheck) {
+      throw new Error("wrong credentials");
+    }
 
-    let agency = await AgencyModel.findOne({ email });
-    console.log(agency);
-    let agencyoTP = agency.createOtp();
+    // let agency = await AgencyModel.findOne({ email });
+    // console.log(agency);
+    if (agency.status === true) {
+      let agencyoTP = agency.createOtp();
 
-    // create random number for OTP
+      // create random number for OTP
 
-    await agency.save({ validateBeforeSave: false });
+      await agency.save({ validateBeforeSave: false });
 
-    // send to user agency
-    console.log(agency);
-    let message = ` 
-
-Hello!\nThis is your OTP FOR AGENCY. \n  ${agencyoTP}. \n For Login to Drivers App. \n Regards`;
-    agency = await sendEmail({
-      email: agency.email,
-      subject: `your login otp`,
-      message,
-    });
-
-    res.status(200).json({ status: "sucess", agency });
+      // send to user agency
+      console.log(agency);
+      let message = ` 
+      
+      Hello!\nThis is your OTP FOR AGENCY. \n  ${agencyoTP}. \n For Login to Drivers App. \n Regards`;
+      agency = await sendEmail({
+        email: agency.email,
+        subject: `your login otp`,
+        message,
+      });
+    } else {
+      throw new Error("Subscribe");
+    }
+    res.status(200).json({ status: "sucess", message: "otp sent to mail" });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }
@@ -78,7 +93,11 @@ exports.agencyLogin = async (req, res) => {
     if (!req.body.otp) throw new Error("Enter otp correctly");
 
     // let currentAgency = await AgencyModel.findOne({ OTP: req.body.otp });
-    currentAgency = await AgencyModel.findOne({ OTP: req.body.otp });
+
+    currentAgency = await AgencyModel.findOne({
+      OTP: req.body.otp,
+      otpExpires: { $gte: Date.now() },
+    });
     console.log(currentAgency);
     if (!currentAgency) {
       throw new Error("invalid agency please register first");
@@ -154,6 +173,47 @@ exports.driversSearch = async (req, res) => {
     drivers = await DriverModel.find({});
 
     res.status(200).json({ status: "sucess", registeredDrivers });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    let agency = await AgencyModel.findOne({ email: req.body.email });
+    let agencyOtp = agency.createOtp();
+    await agency.save({ validateBeforeSave: false });
+    let message = ` 
+
+    Hello!\nThis is your OTP FOR AGENCY reset password. \n  ${agencyOtp}. \n For Login to Drivers App. \n Regards`;
+    agency = await sendEmail({
+      email: agency.email,
+      subject: `your login otp`,
+      message,
+    });
+    res.status(200).json({
+      status: "sucess",
+      message: `Otp has sent to mail `,
+    });
+  } catch (err) {
+    res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    let currentAgency = await AgencyModel.findOne({
+      OTP: req.body.otp,
+      otpExpires: { $gte: Date.now() },
+    });
+    if (!currentAgency) {
+      throw new Error("invalid otp or No agency found");
+    }
+    currentAgency.password = req.body.password;
+    currentAgency.passwordConfirm = req.body.passwordConfirm;
+    // currentAgency.OTP=
+    currentAgency.save();
+    res.status(200).json({ status: "sucess", message: "password resetted" });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
   }

@@ -9,5 +9,7 @@ router
   .route("/getAllDrivers")
   .get(agencyController.protect, agencyController.getAllDrivers);
 router.route("/searchDrivers").get(agencyController.protect);
+router.route("/forgotPasswordAgency").post(agencyController.forgotPassword);
+router.route("/resetPasswordAgency").put(agencyController.resetPassword);
 
 module.exports = router;

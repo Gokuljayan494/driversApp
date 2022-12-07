@@ -16,7 +16,7 @@ const agencySchema = new mongoose.Schema(
     password: {
       type: String,
       required: [true, "password needed"],
-      select: true,
+      select: false,
     },
     passwordConfirm: {
       type: String,
@@ -76,6 +76,15 @@ agencySchema.methods.createOtp = function () {
   this.OTP = OTP;
   this.otpExpires = Date.now() + 10 * 60 * 1000;
   return OTP;
+};
+agencySchema.methods.checkPassword = async function (
+  userInputtedpassword,
+  currentAgencyPassword
+) {
+  console.log(
+    await bcrypt.compare(userInputtedpassword, currentAgencyPassword)
+  );
+  return await bcrypt.compare(currentAgencyPassword, userInputtedpassword);
 };
 const AgencyModel = mongoose.model("Agency", agencySchema);
 module.exports = AgencyModel;

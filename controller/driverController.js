@@ -73,24 +73,37 @@ exports.register = async (req, res) => {
 exports.driverLoginOtp = async (req, res) => {
   try {
     const { email, password } = req.body;
-    if (!email && !password) throw new Error("please enter the inputs");
+    if (!email || !password) throw new Error("please enter the inputs");
     // find by email
-    let driver = await DriverModel.findOne({ email });
-    let driverOtp = driver.createOtp();
+    let driver = await DriverModel.findOne({ email }).select("+password");
+    // if (!driver) {
+    // throw new Error("enter ");
+    // }
+    let driverCheck = await driver.checkPassword(driver.password, password);
+    console.log(driverCheck);
+    if (!driver || !driverCheck) {
+      throw new Error("wrong credentials");
+    }
 
-    // create random number for OTP
-    await driver.save({ validateBeforeSave: false });
+    if (driver.status === true) {
+      let driverOtp = driver.createOtp();
 
-    // send to user Driver
+      // create random number for OTP
+      await driver.save({ validateBeforeSave: false });
 
-    let message = ` 
+      // send to user Driver
 
-Hello!\nThis is your OTP FOR Driver. \n  ${driverOtp}. \n For Login to Drivers App. \n Regards`;
-    agency = await sendEmail({
-      email: driver.email,
-      subject: `your login otp`,
-      message,
-    });
+      let message = ` 
+      
+      Hello!\nThis is your OTP FOR Driver. \n  ${driverOtp}. \n For Login to Drivers App. \n Regards`;
+      agency = await sendEmail({
+        email: driver.email,
+        subject: `your login otp`,
+        message,
+      });
+    } else {
+      throw new Error("subscribe first");
+    }
     res.status(200).json({ status: "sucess", driver });
   } catch (err) {
     res.status(400).json({ status: "Fail", message: `Error:${err.message}` });
@@ -101,7 +114,10 @@ exports.driverLogin = async (req, res) => {
   try {
     let { otp } = req.body;
     if (!otp) throw new Error("enter the otp correctly");
-    let currentDriver = await DriverModel.findOne({ otp: req.body.otp });
+    let currentDriver = await DriverModel.findOne({
+      otp: req.body.otp,
+      otpExpires: { $gte: Date.now() },
+    });
     if (!currentDriver) {
       throw new Error("driver not found please register first");
     }
