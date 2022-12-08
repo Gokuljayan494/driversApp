@@ -81,9 +81,9 @@ agencySchema.methods.checkPassword = async function (
   userInputtedpassword,
   currentAgencyPassword
 ) {
-  console.log(
-    await bcrypt.compare(userInputtedpassword, currentAgencyPassword)
-  );
+  // console.log(
+  //   await bcrypt.compare(userInputtedpassword, currentAgencyPassword)
+  // );
   return await bcrypt.compare(currentAgencyPassword, userInputtedpassword);
 };
 const AgencyModel = mongoose.model("Agency", agencySchema);
