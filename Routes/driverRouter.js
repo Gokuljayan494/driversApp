@@ -1,19 +1,22 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const driverController = require("../controller/driverController");
+const driverController = require('../controller/driverController');
 
 //////////////
 // Register
-router.post("/registerDriver", driverController.register);
-router.route("/loginDriverOtp").post(driverController.driverLoginOtp);
-router.route("/loginDriver").post(driverController.driverLogin);
+router.post('/registerDriver', driverController.register);
+router.route('/loginDriverOtp').post(driverController.driverLoginOtp);
+router.route('/loginDriver').post(driverController.driverLogin);
 router
-  .route("/getAllAgencys")
+  .route('/getAllAgencys')
   .get(driverController.protect, driverController.getAllAgencys);
-router.route("/forgotPasswordDriver").post(driverController.forgotPassword);
-router.route("/resetPasswordDriver").put(driverController.resetPassword);
+router.route('/forgotPasswordDriver').post(driverController.forgotPassword);
+router.route('/resetPasswordDriver').put(driverController.resetPassword);
 
 router
-  .route("/editDriver")
+  .route('/editDriver')
   .put(driverController.protect, driverController.editDriver);
+router
+  .route('/myProfile')
+  .get(driverController.protect, driverController.profile);
 module.exports = router;

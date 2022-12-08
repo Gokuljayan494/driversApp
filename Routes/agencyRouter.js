@@ -17,4 +17,7 @@ router
 router
   .route('/editAgency')
   .put(agencyController.protect, agencyController.editAgency);
+router
+  .route('/myProfile')
+  .get(agencyController.protect, agencyController.profile);
 module.exports = router;

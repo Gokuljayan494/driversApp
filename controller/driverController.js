@@ -239,3 +239,12 @@ exports.editDriver = async (req, res) => {
     res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
   }
 };
+
+exports.profile = async (req, res) => {
+  try {
+    const driver = await DriverModel.findById(req.user);
+    res.status(200).json({ status: 'sucess', driver });
+  } catch (err) {
+    res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
+  }
+};

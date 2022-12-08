@@ -260,3 +260,12 @@ exports.editAgency = async (req, res) => {
     res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
   }
 };
+
+exports.profile = async (req, res) => {
+  try {
+    const agency = await AgencyModel.findById(req.user);
+    res.status(200).json({ status: 'sucess', agency });
+  } catch (err) {
+    res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
+  }
+};
