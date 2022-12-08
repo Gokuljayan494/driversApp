@@ -1,12 +1,12 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const agencySchema = new mongoose.Schema(
   {
     companyName: {
       type: String,
-      required: [true, "a company must need a name"],
+      required: [true, 'a company must need a name'],
       unique: true,
     },
     userName: {
@@ -15,7 +15,7 @@ const agencySchema = new mongoose.Schema(
     },
     password: {
       type: String,
-      required: [true, "password needed"],
+      required: [true, 'password needed'],
       select: false,
     },
     passwordConfirm: {
@@ -30,24 +30,24 @@ const agencySchema = new mongoose.Schema(
     },
     phone: {
       type: String,
-      required: [true, "a company must need a phone number"],
+      required: [true, 'a company must need a phone number'],
     },
     email: {
       type: String,
-      required: [true, "Email required"],
+      required: [true, 'Email required'],
       Math: [
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         ,
-        "please enter a  valid email id",
+        'please enter a  valid email id',
       ],
 
-      validate: [validator.isEmail, "please provide a email"],
+      validate: [validator.isEmail, 'please provide a email'],
       unique: true,
     },
     state: { type: String, required: [true] },
     district: { type: String, required: [true] },
     pincode: { type: Number, required: [true] },
-    OTP: { type: String, default: "notVerified" },
+    OTP: { type: String, default: 'notVerified' },
     otpExpires: { type: Date },
     status: {
       type: Boolean,
@@ -65,8 +65,8 @@ const agencySchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-agencySchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+agencySchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
@@ -81,10 +81,7 @@ agencySchema.methods.checkPassword = async function (
   userInputtedpassword,
   currentAgencyPassword
 ) {
-  // console.log(
-  //   await bcrypt.compare(userInputtedpassword, currentAgencyPassword)
-  // );
   return await bcrypt.compare(currentAgencyPassword, userInputtedpassword);
 };
-const AgencyModel = mongoose.model("Agency", agencySchema);
+const AgencyModel = mongoose.model('Agency', agencySchema);
 module.exports = AgencyModel;

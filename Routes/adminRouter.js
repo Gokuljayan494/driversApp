@@ -1,7 +1,14 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
+const adminController = require('../controller/adminController');
 
-//////////////
-// Register
+router.route('/registerAdmin').post(adminController.adminCreate);
+router.route('/loginAdmin').post(adminController.loginAdmin);
+router
+  .route('/totalDriversAndTotalAgencies')
+  .get(adminController.protect, adminController.getTotalDrivers);
+// router
+//   .route('/totalAgencies')
+//   .get(adminController.protect, adminController.getTotalAgencys);
 
 module.exports = router;

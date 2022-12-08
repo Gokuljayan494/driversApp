@@ -1,23 +1,25 @@
-const express = require("express");
+const express = require('express');
 const app = express();
-const mongoose = require("mongoose");
-const adminRouter = require("./Routes/adminRouter");
-const driverRouter = require("./Routes/driverRouter");
-const agencyRouter = require("./Routes/agencyRouter");
-const cors = require("cors");
-const dotenv = require("dotenv");
-const bodyparser = require("body-parser");
+const mongoose = require('mongoose');
+const adminRouter = require('./Routes/adminRouter');
+const driverRouter = require('./Routes/driverRouter');
+const agencyRouter = require('./Routes/agencyRouter');
+const sanitize = require('sanitize');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const bodyparser = require('body-parser');
 /////////////////////////////////////////
-dotenv.config({ path: "./config.env" });
+dotenv.config({ path: './config.env' });
 app.use(express.urlencoded({ extended: true }));
+
 // app.use(express.)
+app.use(sanitize.middleware);
 app.use(express.json());
-app.use(express.static("public"));
+app.use(express.static('public'));
 app.use(cors());
-console.log(process.env.NODE_ENV);
 mongoose
   .connect(
-    `mongodb+srv://gokuljayan:5s7IGmkr3HNFbxbu@cluster0.ilu27pp.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://gokuljayan:${process.env.MONGOOSE_PASSWORD}@cluster0.ilu27pp.mongodb.net/?retryWrites=true&w=majority`
   )
   .then((con) => {
     console.log(`Db connected `);
@@ -30,6 +32,6 @@ app.use(`/api/v1/driver`, driverRouter);
 app.use(`/api/v1/agency`, agencyRouter);
 app.use(`/api/v1/admin`, adminRouter);
 
-app.listen("5000", () => {
+app.listen('5000', () => {
   console.log(`server started at port 3000`);
 });
