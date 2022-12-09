@@ -86,11 +86,65 @@ exports.getTotalDrivers = async (req, res) => {
   }
 };
 
-// exports.getTotalAgencys = async (req, res) => {
+exports.drivers = async (req, res) => {
+  try {
+    let { page, size } = req.query;
+    if (!page) {
+      page = 1;
+    }
+    if (!size) {
+      size = 2;
+    }
+    const limit = parseInt(size);
+    const skip = (page - 1) * size;
+    drivers = await DriverModel.find().limit(limit).skip(skip);
+    res.status(200).json({ status: 'sucess', drivers });
+  } catch (err) {
+    res.status(400).json({ Status: 'fail', message: `Error:${err.message}` });
+  }
+};
+
+let ActivateModel = function (Model, params) {
+  let activate = Model.findById(params);
+  console.log(activate.status);
+  console.log(activate.status);
+  if (activate.status === true) {
+    activate.status = false;
+    activate.save();
+  } else {
+    activate.status = true;
+    activate.save();
+  }
+  return activate;
+};
+
+exports.activateDrivers = async (req, res) => {
+  try {
+    let driver = ActivateModel(DriverModel, req.params.driverId);
+    console.log(driver.status);
+    res.status(200).json({ status: 'sucess', driver });
+  } catch (err) {
+    res.status(400).json({ Status: 'fail', message: `Error:${err.message}` });
+  }
+};
+exports.activateAgency = async (req, res) => {
+  try {
+    let agency = ActivateModel(AgencyModel, req.params.agencyId);
+    console.log(agency.status);
+    res.status(200).json({ status: 'sucess', agency });
+  } catch (err) {
+    res.status(400).json({ Status: 'fail', message: `Error:${err.message}` });
+  }
+};
+
+// exports.sort = async (req, res) => {
 //   try {
-//     let agencys = await DriverModel.find();
-//     agencys = agencys.length - 1;
-//     res.status(200).json({ status: 'sucess', agencys });
+//     let driver = await DriverModel.find({}).sort();
+//     console.log(req.query);
+//     console.log(driver);
+//     db.vehicleinformation.find({}, { _id: 0 }).sort({ year: 1 });
+//     driver = driver.sort(req.query.sort);
+//     res.status(200).json({ status: 'sucess', driver });
 //   } catch (err) {
 //     res.status(400).json({ Status: 'fail', message: `Error:${err.message}` });
 //   }

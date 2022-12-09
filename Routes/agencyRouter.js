@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const agencyController = require('../controller/agencyController');
-
+const adsController = require('../controller/adsController');
 router.route('/registerAgency').post(agencyController.registerAgency);
 router.route('/loginAgencyOtp').post(agencyController.agencyLoginOtp);
 router.route('/loginAgency').post(agencyController.agencyLogin);
@@ -20,4 +20,5 @@ router
 router
   .route('/myProfile')
   .get(agencyController.protect, agencyController.profile);
+router.route('/getAds').get(adsController.getAds);
 module.exports = router;

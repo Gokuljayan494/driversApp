@@ -2,6 +2,8 @@ const AgencyModel = require('../model/agencyModel');
 const sendEmail = require('../utils/email');
 let handlebars = require('handlebars');
 const jwt = require('jsonwebtoken');
+const country = require('country-state-city');
+
 const DriverModel = require('../model/driversModel');
 const signToken = (id) => {
   return jwt.sign({ id }, `THE-SECRET-VALUE-9898-ALLOWS-TO-OPEN-AGENCY`, {
