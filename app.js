@@ -8,6 +8,8 @@ const sanitize = require('sanitize');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const bodyparser = require('body-parser');
+const csrf = require('csurf');
+const csrfProtection = csrf();
 /////////////////////////////////////////
 dotenv.config({ path: './config.env' });
 app.use(express.urlencoded({ extended: true }));
