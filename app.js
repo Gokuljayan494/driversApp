@@ -20,10 +20,13 @@ const csrfProtection = csrf();
 const upload = multer({ dest: 'uploads/' });
 // var bodyParser = require(‘body-parser’);
 // const app = express()
+const countryRouter = require('./Routes/countryRouter');
 mongoose.set('strictQuery', true);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 /////////////////////////////////////////
+console.log(`api:${process.env.api_key}`);
+
 dotenv.config({ path: './config.env' });
 app.use('/public', express.static('public'));
 app.use(express.urlencoded({ extended: true }));
@@ -74,6 +77,7 @@ app.use((req, res, next) => {
 app.use(`/api/v1/driver`, driverRouter);
 app.use(`/api/v1/agency`, agencyRouter);
 app.use(`/api/v1/admin`, adminRouter);
+app.use('/api/v1/country', countryRouter);
 
 app.listen('3000', () => {
   console.log(`server started at port 3000`);
