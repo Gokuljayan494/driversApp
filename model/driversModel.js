@@ -1,33 +1,33 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const validator = require("validator");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const validator = require('validator');
 
 const DriverSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "a driver must need a name"],
+      required: [true, 'a driver must need a name'],
       unique: true,
     },
     mobile: {
       type: Number,
-      required: [true, "a driver must need a number"],
+      required: [true, 'a driver must need a number'],
     },
     email: {
       type: String,
-      required: [true, "Email required"],
+      required: [true, 'Email required'],
       Math: [
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         ,
-        "please enter a  valid email id",
+        'please enter a  valid email id',
       ],
 
-      validate: [validator.isEmail, "please provide a email"],
+      validate: [validator.isEmail, 'please provide a email'],
       unique: true,
     },
     password: {
       type: String,
-      required: [true, "password needed"],
+      required: [true, 'password needed'],
       select: false,
     },
     passwordConfirm: {
@@ -40,8 +40,10 @@ const DriverSchema = new mongoose.Schema(
         },
       },
     },
+    country: { type: String, required: [true] },
+
     state: { type: String, required: [true] },
-    district: { type: String, required: [true] },
+    city: { type: String, required: [true] },
     pincode: { type: Number, required: [true] },
     LicenceType: {
       type: Array,
@@ -54,7 +56,7 @@ const DriverSchema = new mongoose.Schema(
     },
     otp: {
       type: String,
-      default: "notVerified",
+      default: 'notVerified',
     },
     otpExpires: { type: Date },
     status: {
@@ -74,8 +76,8 @@ const DriverSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-DriverSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+DriverSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
 
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
@@ -95,6 +97,6 @@ DriverSchema.methods.checkPassword = async function (
   );
   return await bcrypt.compare(currentAgencyPassword, userInputtedpassword);
 };
-const DriverModel = mongoose.model("Driver", DriverSchema);
+const DriverModel = mongoose.model('Driver', DriverSchema);
 
 module.exports = DriverModel;
