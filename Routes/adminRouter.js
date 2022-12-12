@@ -21,7 +21,5 @@ router
   .route('/activateAdmin/:agencyId')
   .put(adminController.protect, adminController.activateAgency);
 
-router
-  .route('/uploadAds')
-  .post(adsController.uploadAdsMulter, adsController.uploadAds);
+router.route('/uploadAds').post(adsController.uploadAds);
 module.exports = router;

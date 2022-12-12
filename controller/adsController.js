@@ -14,7 +14,6 @@ cloudinary.config({
   api_key: '651867513143989',
   api_secret: 'nRV4E2rXZ4Eg9j-SqjUuAejgYR0',
 });
-
 let cloudinaryStorage = new CloudinaryStorage({
   cloudinary,
   folder: 'Driver APP',
@@ -63,8 +62,3 @@ exports.getAds = async (req, res) => {
     res.status(400).json({ status: 'fail', message: `Error:${err.message}` });
   }
 };
-
-////////////////////////
-//...
-
-//...
