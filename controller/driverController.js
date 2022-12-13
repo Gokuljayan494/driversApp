@@ -107,7 +107,7 @@ exports.driverLoginOtp = async (req, res) => {
     }
     res.status(200).json({ status: 'sucess', message: 'OTP has sent to mail' });
   } catch (err) {
-    res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
+    res.status(401).json({ status: 'Fail', message: `Error:${err.message}` });
   }
 };
 
@@ -130,10 +130,10 @@ exports.driverLogin = async (req, res) => {
       }
       res.status(200).json({ status: 'sucess', currentDriver, token });
     } else {
-      res.status(400).json({ status: 'fail', message: `Error:not subscribed` });
+      res.status(401).json({ status: 'fail', message: `Error:not subscribed` });
     }
   } catch (err) {
-    res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });
+    res.status(401).json({ status: 'Fail', message: `Error:${err.message}` });
   }
 };
 exports.protect = async (req, res, next) => {
