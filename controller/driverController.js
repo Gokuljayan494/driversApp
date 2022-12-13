@@ -209,12 +209,31 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-exports.resetPassword = async (req, res) => {
+exports.ConfirmOtpReset = async (req, res) => {
   try {
     let currentDriver = await DriverModel.findOne({
       otp: req.body.otp,
       otpExpires: { $gte: Date.now() },
     });
+    if (!currentDriver) {
+      throw new Error('invalid otp ');
+    }
+    res.status(200).json({ status: 'sucess', message: 'valid otp' });
+  } catch (err) {
+    res.status(200).json({ status: 'sucess', message: `Error:${err.message}` });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    let { email, otp } = req.body;
+    console.log(email, otp);
+    let currentDriver = await DriverModel.findOne({
+      email,
+      otp,
+      otpExpires: { $gte: Date.now() },
+    });
+    console.log(currentDriver);
     if (!currentDriver) {
       throw new Error('invalid otp or No agency found');
     }

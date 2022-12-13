@@ -210,19 +210,38 @@ exports.forgotPassword = async (req, res) => {
   }
 };
 
-exports.resetPassword = async (req, res) => {
+exports.ConfirmOtpReset = async (req, res) => {
   try {
     let currentAgency = await AgencyModel.findOne({
       OTP: req.body.otp,
       otpExpires: { $gte: Date.now() },
     });
     if (!currentAgency) {
-      throw new Error('invalid otp or No agency found');
+      throw new Error('invalid otp ');
     }
-    currentAgency.password = req.body.password;
-    currentAgency.passwordConfirm = req.body.passwordConfirm;
+    res.status(200).json({ status: 'sucess', message: 'valid otp' });
+  } catch (err) {
+    res.status(200).json({ status: 'sucess', message: `Error:${err.message}` });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    let { email, otp } = req.body;
+    let agency = await AgencyModel.findOne({
+      email,
+      otp,
+      otpExpires: { $gte: Date.now() },
+    });
     // currentAgency.OTP=
-    currentAgency.save();
+    console.log(agency);
+    if (!agency) {
+      throw new Error('no agency found');
+    }
+    agency.password = req.body.password;
+    agency.passwordConfirm = req.body.passwordConfirm;
+
+    agency.save();
     res.status(200).json({ status: 'sucess', message: 'password resetted' });
   } catch (err) {
     res.status(400).json({ status: 'Fail', message: `Error:${err.message}` });

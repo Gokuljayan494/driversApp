@@ -11,6 +11,8 @@ router
   .route('/getAllAgencys')
   .get(driverController.protect, driverController.getAllAgencys);
 router.route('/forgotPasswordDriver').post(driverController.forgotPassword);
+router.route('/resetOtp').post(driverController.ConfirmOtpReset);
+
 router.route('/resetPasswordDriver').put(driverController.resetPassword);
 
 router

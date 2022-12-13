@@ -10,6 +10,7 @@ router
   .get(agencyController.protect, agencyController.getAllDrivers);
 router.route('/searchDrivers').get(agencyController.protect);
 router.route('/forgotPasswordAgency').post(agencyController.forgotPassword);
+router.route('/resetOtp').post(agencyController.ConfirmOtpReset);
 router.route('/resetPasswordAgency').put(agencyController.resetPassword);
 router
   .route('/searchDriverByVehicle/:vehicles')
