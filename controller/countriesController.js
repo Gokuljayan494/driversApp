@@ -8,11 +8,34 @@ const city = require('country-state-city').City;
 
 exports.getAllCountries = async (req, res) => {
   try {
+    let countries1 = [];
     console.log(country.getAllCountries());
-    countries = country.getAllCountries();
-    res
-      .status(200)
-      .json({ status: 'sucess', result: countries.length - 1, countries });
+    let countries = country.getAllCountries();
+    // countries.forEach((el) => {
+    //   console.log(el);
+    // });
+
+    countries.forEach((el) => {
+      console.log(el.phonecode.startsWith('1'));
+      if (!el.phonecode.startsWith('+')) {
+        // countries = el;
+        console.log(`--------`);
+        console.log(`--------`);
+        console.log(`--------`);
+        console.log(`--------`);
+        console.log(`--------`);
+        console.log(el);
+        countries1.push(el);
+      }
+      console.log(`hey`);
+    });
+    // console.log(countries);
+    res.status(200).json({
+      status: 'sucess',
+      result: countries1.length - 1,
+      // countries,
+      countries1,
+    });
   } catch (err) {
     res.status(400).json({ status: 'fail', message: `Error:${err.message}` });
   }
