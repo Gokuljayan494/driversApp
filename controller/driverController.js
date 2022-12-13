@@ -22,6 +22,8 @@ exports.register = async (req, res) => {
       pincode,
       LicenceType,
       selectVehicle,
+      city,
+      country,
     } = req.body;
     console.log();
 
@@ -38,6 +40,8 @@ exports.register = async (req, res) => {
         state,
         district,
         pincode,
+        city,
+        country,
       }
       // req.body
     );

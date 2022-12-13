@@ -22,6 +22,8 @@ exports.registerAgency = async (req, res) => {
       state,
       district,
       pincode,
+      city,
+      country,
     } = req.body;
     const agecny = await AgencyModel.create({
       companyName,
@@ -33,6 +35,8 @@ exports.registerAgency = async (req, res) => {
       state,
       district,
       pincode,
+      city,
+      country,
     });
     res.status(200).json({ status: 'sucess', agecny });
   } catch (err) {
