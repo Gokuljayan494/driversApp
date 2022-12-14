@@ -62,13 +62,18 @@ exports.getAllState = async (req, res) => {
 exports.getAllCities = async (req, res) => {
   try {
     let cities = req.params.cities;
+    console.log(cities);
+    console.log(cities.split(','));
+    cities = cities.split(',');
+    console.log(cities[1]);
     // cities = 'KL';
-    console.log(city.getCitiesOfCountry('IN'));
-    let citiesResult = city.getCitiesOfCountry('IN');
+    console.log(city.getCitiesOfCountry(cities[0]));
+    let citiesResult = city.getCitiesOfCountry(cities[0]);
+
     let citiesResultStore = [];
     // citiesResult = city.getCitiesOfState('Manitoba');
     citiesResult.forEach((el) => {
-      if (el.stateCode === req.params.cities) {
+      if (el.stateCode === cities[1]) {
         citiesResultStore.push(el);
       }
     });

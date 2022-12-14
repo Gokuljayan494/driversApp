@@ -17,6 +17,7 @@ const country = require('country-state-city');
 const csrf = require('csurf');
 const multer = require('multer');
 const csrfProtection = csrf();
+const AWS = require('aws-sdk');
 const upload = multer({ dest: 'uploads/' });
 // var bodyParser = require(‘body-parser’);
 // const app = express()
